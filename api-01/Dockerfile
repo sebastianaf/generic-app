@@ -1,5 +1,5 @@
 FROM node:16
-COPY ["package.json","package-lock.json","/org/app/"]
+COPY ["package.json","package-lock.json","/usr/org/app/"]
 WORKDIR /usr/org/app
 RUN npm install
 RUN npm run build

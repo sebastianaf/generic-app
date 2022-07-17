@@ -13,7 +13,7 @@ services:
       TZ: ${TZ}
     build:
       context: ./api-01
-      dockerfile: .Dockerfile
+      dockerfile: Dockerfile
       args:
         API_PORT: ${API_PORT}
 #    ports: 

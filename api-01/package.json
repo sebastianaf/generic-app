@@ -1,27 +1,12 @@
 {
-  "name": "genericback",
-  "version": "1.0.0",
-  "description": "A quickstart code to build NodeJS backend services",
   "main": "index.js",
   "scripts": {
     "build": "npx babel src -d dist",
     "start": "node dist/index.js",
     "dev": "npx nodemon --exec npx \"babel-node\" src/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sebastianaf/genericBack.git"
-  },
-  "keywords": [
-    "nodejs",
-    "backend"
-  ],
   "author": "sebastianaf",
   "license": "GNU",
-  "bugs": {
-    "url": "https://github.com/sebastianaf/genericBack/issues"
-  },
-  "homepage": "https://github.com/sebastianaf/genericBack#readme",
   "devDependencies": {
     "@babel/cli": "^7.17.10",
     "@babel/core": "^7.18.5",

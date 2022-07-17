@@ -19,11 +19,27 @@ services:
       args:
         API_PORT: ${API_PORT}
     ports: 
-      - 8080:${API_PORT}
+      - 9010:${API_PORT}
     depends_on:
       - org-project-db
     networks:
       - org-project
+
+  org-project-db-01:
+    container_name: org-project-db-01
+    restart: always
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      TZ: ${TZ}
+    volumes:
+      - ../db:/var/lib/postgresql/data
+    ports: 
+      - 9020:${API_PORT}
+    networks:
+      - org-project     
 
   org-project-ui-01:
     container_name: org-project-ui-01
@@ -40,7 +56,21 @@ services:
     depends_on:
       - org-project-api-01
     ports:
-      - 8081:${UI_PORT}
+      - 9030:${UI_PORT}
+    networks:
+      - org-project
+
+  org-project-pgadmin:
+    container_name: org-project-pgadmin
+    restart: always
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
+    depends_on:
+      - org-project-db
+    ports: 
+      - 9040:80
     networks:
       - org-project
 
@@ -55,34 +85,6 @@ services:
       SUBDOMAINS: ${SUBDOMAINS}
       DUCKDNS_TOKEN: ${DUCKDNS_TOKEN}
       LOG_FILE: ${LOG_FILE}
-    networks:
-      - org-project
-
-  org-project-db:
-    container_name: org-project-db
-    restart: always
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_DATABASE}
-      TZ: ${TZ}
-    volumes:
-      - ../db:/var/lib/postgresql/data
-    networks:
-      - org-project
-
-  org-project-pgadmin:
-    container_name: org-project-pgadmin
-    restart: always
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
-    depends_on:
-      - org-project-db
-    ports: 
-      - 8082:80
     networks:
       - org-project
 

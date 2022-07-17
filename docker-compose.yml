@@ -18,8 +18,8 @@ services:
       dockerfile: Dockerfile
       args:
         API_PORT: ${API_PORT}
-#    ports: 
-#      - 8080:${API_PORT}
+    ports: 
+      - 8080:${API_PORT}
     networks:
       - org-project
 
@@ -35,8 +35,8 @@ services:
       dockerfile: Dockerfile
       args:
         UI_PORT: ${UI_PORT}
-#    ports:
-#      - 8081:${UI_PORT}
+    ports:
+      - 8081:${UI_PORT}
     networks:
       - org-project
 
@@ -77,8 +77,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
     depends_on:
       - org-project-db
-#    ports: 
-#      - 8082:80
+    ports: 
+      - 8082:80
     networks:
       - org-project
 

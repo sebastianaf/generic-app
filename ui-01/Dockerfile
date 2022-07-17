@@ -1,8 +1,8 @@
 FROM node:16
-COPY ["package.json","package-lock.json","/org/app/"]
+COPY ["package.json","package-lock.json","/usr/org/app/"]
 WORKDIR /usr/org/app
 RUN npm install
+COPY [".","/usr/org/app/"]
 RUN npm run build
-COPY [".","/org/app/"]
 EXPOSE ${APP_PORT}
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build"]

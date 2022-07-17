@@ -20,6 +20,8 @@ services:
         API_PORT: ${API_PORT}
     ports: 
       - 8080:${API_PORT}
+    depends_on:
+      - org-project-db
     networks:
       - org-project
 
@@ -35,6 +37,8 @@ services:
       dockerfile: Dockerfile
       args:
         UI_PORT: ${UI_PORT}
+    depends_on:
+      - org-project-api-01
     ports:
       - 8081:${UI_PORT}
     networks:

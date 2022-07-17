@@ -22,6 +22,22 @@ services:
     networks:
       - org-project
 
+  org-project-ui-01:
+    container_name: org-project-ui-01
+    restart: always
+    environment:
+      UI_PORT: ${UI_PORT}
+      API_HOST: ${API_HOST}
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      args:
+        UI_PORT: ${UI_PORT}
+#    ports:
+#      - 8081:${API_PORT}
+    networks:
+      - org-project
+
   org-project-duckdns:
     container_name: org-project-duckdns
     restart: always
@@ -60,7 +76,7 @@ services:
     depends_on:
       - org-project-db
 #    ports: 
-#      - 8081:80
+#      - 8082:80
     networks:
       - org-project
 

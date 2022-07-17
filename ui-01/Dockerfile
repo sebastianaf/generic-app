@@ -4,5 +4,5 @@ WORKDIR /usr/org/app
 RUN npm install
 COPY [".","/usr/org/app/"]
 RUN npm run build
-EXPOSE ${APP_PORT}
+EXPOSE ${UI_PORT}
 CMD ["serve", "-s", "build"]

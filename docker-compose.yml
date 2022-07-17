@@ -35,7 +35,7 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
       TZ: ${TZ}
     volumes:
-      - ../db:/var/lib/postgresql/data
+      - ./db:/var/lib/postgresql/data
     ports: 
       - 9020:${API_PORT}
     networks:

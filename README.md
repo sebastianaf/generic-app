@@ -47,7 +47,8 @@ docker compose -p org-project -up -d --build
 ```
 
 This commands will wake up the services access it thought port specified in `$UI_PORT`,`$API_PORT` environment variables.
-All the services will expose the ports `9010`, `9020`, `9030`, and `9040` for `api-01`, `db-01`, `ui-01` and `pgadmin` respectively.
+All the services will expose the ports `9010`, `9020`, `9030`, and `9040` for `api-01`, `db-01`, `ui-01` and `pgadmin` respectively, Nevertheless is recomended to use a docker private network with a reverse proxy.
+
 
 ## Folder contents
 

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx babel src -d dist",
-    "start": "node lib/index.js",
+    "start": "node dist/index.js",
     "dev": "npx nodemon --exec npx \"babel-node\" src/index.js"
   },
   "repository": {

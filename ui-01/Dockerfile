@@ -5,4 +5,4 @@ RUN npm install
 COPY [".","/usr/org/app/"]
 RUN npm run build
 EXPOSE ${UI_PORT}
-CMD ["serve", "-l", "$UI_PORT", "-s", "build"]
+CMD ["npx", "serve", "-l", "$UI_PORT", "-s", "build"]

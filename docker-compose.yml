@@ -34,7 +34,7 @@ services:
       args:
         UI_PORT: ${UI_PORT}
 #    ports:
-#      - 8081:${API_PORT}
+#      - 8081:${UI_PORT}
     networks:
       - org-project
 

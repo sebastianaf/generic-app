@@ -29,7 +29,7 @@ services:
       UI_PORT: ${UI_PORT}
       API_HOST: ${API_HOST}
     build:
-      context: ./api
+      context: ./ui-01
       dockerfile: Dockerfile
       args:
         UI_PORT: ${UI_PORT}

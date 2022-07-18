@@ -13,6 +13,23 @@ const UserSchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
+
+  alias: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+
+  password: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+
+  idUser: {
+    allowNull: false,
+    field: "id_user",
+    type: DataTypes.INTEGER,
+  },
+
   createAt: {
     allowNull: true,
     field: "created_at",

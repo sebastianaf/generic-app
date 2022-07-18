@@ -12,11 +12,13 @@ const UserSchema = {
   name: {
     allowNull: false,
     type: DataTypes.STRING,
+    unique: true,
   },
 
   alias: {
     allowNull: false,
     type: DataTypes.STRING,
+    unique: true,
   },
 
   password: {
@@ -46,7 +48,7 @@ class User extends Model {
       sequelize,
       tableName: USER_TABLE,
       modelName: "User",
-      timestamps: false
+      timestamps: false,
     };
   }
 }

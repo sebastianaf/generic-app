@@ -5,6 +5,7 @@ import {
   updateUserSchema,
   createUserSchema,
   getUserSchema,
+  loginUserSchema,
 } from "../schemas/user.schema";
 import validatorHandler from "../middlewares/validator.handler";
 
@@ -25,9 +26,21 @@ router.post(
   validatorHandler(createUserSchema, `body`),
   async (req, res, next) => {
     try {
-      const users = await service.register(req.body);
-      console.log(users);
-      res.send({});
+      const newUser = await service.register(req.body);
+      res.status(201).json(newUser);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/login",
+  validatorHandler(loginUserSchema, `body`),
+  async (req, res, next) => {
+    try {
+      const loginData = await service.login(req.body);
+      res.send(loginData);
     } catch (error) {
       next(error);
     }

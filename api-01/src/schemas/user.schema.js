@@ -24,4 +24,9 @@ const getUserSchema = Joi.object({
   id: id.required(),
 });
 
-export { createUserSchema, updateUserSchema, getUserSchema };
+const loginUserSchema = Joi.object({
+  alias: alias.required(),
+  password: password.required(),
+});
+
+export { createUserSchema, updateUserSchema, getUserSchema, loginUserSchema };

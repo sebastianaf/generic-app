@@ -1,7 +1,6 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
-import S from "string";
 
-const tableName = "user";
+const USER_TABLE = "users";
 
 const UserSchema = {
   id: {
@@ -15,7 +14,7 @@ const UserSchema = {
     type: DataTypes.STRING,
   },
   createAt: {
-    allowNull: false,
+    allowNull: true,
     field: "created_at",
     type: DataTypes.DATE,
     defaultValue: Sequelize.NOW,
@@ -28,10 +27,11 @@ class User extends Model {
   static config(sequelize) {
     return {
       sequelize,
-      tableName,
-      modelName: S(tableName).capitalize().camelize().s,
+      tableName: USER_TABLE,
+      modelName: "User",
+      timestamps: false
     };
   }
 }
 
-export { tableName, UserSchema, User };
+export { USER_TABLE, UserSchema, User };

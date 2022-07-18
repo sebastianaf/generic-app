@@ -8,15 +8,11 @@ class UserService {
 
   async find() {
     try {
-      const { data, metadata } = await models.User.findAll();
-      return { data };
+      const res = await models.User.findAll();
+      return res;
     } catch (error) {
-      return boom.badData(error);
+      return boom.badData();
     }
-  }
-
-  async findOne(id) {
-    return { id };
   }
 }
 

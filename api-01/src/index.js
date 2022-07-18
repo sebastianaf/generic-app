@@ -3,13 +3,12 @@ import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
 import fs from "fs";
-import S from "string";
 
 import whitelist from "./config/whitelist";
 import { morganOptions } from "./config/morgan";
-import { dbOptions } from "./config/db";
-import { logOptions } from "./config/log";
-import { sequelize } from "./db/sequelize";
+import db from "./config/db";
+import log from "./config/log";
+import sequelize from "./db/sequelize";
 import { toInteger } from "lodash";
 import { logCheck } from "./tools/log";
 import auth from "./middlewares/auth.handler";
@@ -39,7 +38,7 @@ app.use(express.json()); // for parsing application/json
 toInteger(process.env.API_LOG)
   ? app.use(
       morgan(morganOptions, {
-        stream: fs.createWriteStream(logOptions.filePath, { flags: "a" }),
+        stream: fs.createWriteStream(log.filePath, { flags: "a" }),
       })
     )
   : null;
@@ -49,22 +48,17 @@ app.use(morgan(morganOptions));
 /***
  * Routes
  */
-app.get("/", (req, res) => {
-  res.send("OK");
+app.get("/test-db", async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    res.send("Connection has been established successfully");
+  } catch (error) {
+    res.send("Unable to connect to the database");
+    console.log(error);
+  }
 });
 
 routerAPI(app);
-
-//testing conection
-(async () => {
-  try {
-    console.log(dbOptions);
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
-  } catch (error) {
-    //console.error("Unable to connect to the database:", error);
-  }
-})();
 
 app.listen(process.env.API_PORT, () => {
   console.log(`Running on port ${process.env.API_PORT}`);

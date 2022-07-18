@@ -7,12 +7,13 @@ import S from "string";
 
 import whitelist from "./config/whitelist";
 import { morganOptions } from "./config/morgan";
+import { dbOptions } from "./config/db";
 import { logOptions } from "./config/log";
 import { sequelize } from "./db/sequelize";
 import { toInteger } from "lodash";
 import { logCheck } from "./tools/log";
 import auth from "./middlewares/auth.handler";
-import routerApi from "./routes";
+import routerAPI from "./routes";
 
 require("dotenv").config();
 
@@ -52,15 +53,16 @@ app.get("/", (req, res) => {
   res.send("OK");
 });
 
-routerApi(app);
+routerAPI(app);
 
 //testing conection
 (async () => {
   try {
+    console.log(dbOptions);
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    //console.error("Unable to connect to the database:", error);
   }
 })();
 

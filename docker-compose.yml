@@ -37,7 +37,7 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data
     ports: 
-      - 9020:${API_PORT}
+      - 9020:5432
     networks:
       - org-project     
 

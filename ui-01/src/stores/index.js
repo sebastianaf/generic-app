@@ -5,8 +5,8 @@ import reducer from "../reducers";
 const initialState = {
   app: { name: `generic-front`, version: `1.5.0` },
   user: {
-    name: `generic-front`,
-    role: `generic-role`,
+    name: null,//`generic-front`,
+    role: null//`generic-role`,
   },
   open: true,
 };

@@ -1,13 +1,62 @@
-import React from "react";
-import { Navigate, Link } from "react-router-dom";
-import Button from "../components/Button";
+import React, { useState } from "react";
+import { Navigate, Link, useNavigate } from "react-router-dom";
+
+import ActionButton from "../components/ActionButton";
+
 import logo from "../assets/img/logo.png";
+import headers from "../config/headers";
+import api from "../config/api";
 
 //Redux
 import { connect } from "react-redux";
 
 const Login = (props) => {
   const { user } = props;
+
+  const [typedUser, setTypedUser] = useState("");
+  const [typedPassword, setTypedPassword] = useState("");
+  const [danger, setDanger] = useState(false);
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  let navigate = useNavigate();
+
+  const login = async () => {
+    try {
+      if (typedUser !== "" && typedPassword !== "") {
+        var req = {
+          headers,
+          body: JSON.stringify({
+            typedUser,
+            typedPassword,
+          }),
+          method: "POST",
+        };
+
+        const data = await fetch(`${api.host}/login`, req);
+        const res = await data.json();
+        if (res.error === null) {
+          setLoading(true);
+          localStorage.setItem("token", res.token);
+          navigate(`/asdas`);
+        } else {
+          setLoading(true);
+          setMessage(res.error);
+          setDanger(!danger);
+        }
+      } else {
+        setLoading(true);
+        setMessage("Datos de inicio incompletos");
+        setDanger(!danger);
+      }
+    } catch (error) {
+      console.log(error);
+      setMessage("Error de conexión, intenta de nuevo");
+      setDanger(!danger);
+      setLoading(true);
+    }
+  };
+
   return !user.name ? (
     <div className={`flex items-center justify-center min-h-screen`}>
       <div
@@ -37,22 +86,23 @@ const Login = (props) => {
             <input type={`hidden`} name={`remember`} defaultValue={`true`} />
             <div className={`rounded-md shadow-sm -space-y-px`}>
               <div>
-                <label htmlFor={`email-address`} className={`sr-only`}>
-                  Email address
+                <label htmlFor={`user`} className={`sr-only`}>
+                  Usuario
                 </label>
                 <input
-                  id={`email-address`}
-                  name={`email`}
-                  type={`email`}
-                  autoComplete={`email`}
+                  id={`user`}
+                  name={`user`}
+                  type={`user`}
+                  autoComplete={`user`}
                   required
                   className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm`}
-                  placeholder={`Dirección de correo`}
+                  placeholder={`Usuario`}
+                  onChange={(e) => setTypedUser(e.target.value)}
                 />
               </div>
               <div>
                 <label htmlFor={`password`} className={`sr-only`}>
-                  Password
+                  Contraseña
                 </label>
                 <input
                   id={`password`}
@@ -62,6 +112,7 @@ const Login = (props) => {
                   required
                   className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm`}
                   placeholder={`Contraseña`}
+                  onChange={(e) => setTypedPassword(e.target.value)}
                 />
               </div>
             </div>
@@ -93,7 +144,14 @@ const Login = (props) => {
             </div>
 
             <div>
-              <Button data={{ title: `Iniciar`, to: `/dashboart` }} />
+              <ActionButton
+                onClick={() => {
+                  setLoading(!loading);
+                  login();
+                }}
+                loading={loading}
+                data={{ title: `Iniciar` }}
+              />
             </div>
           </form>
         </div>

@@ -1,14 +1,16 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import "../styles/index.css";
+
+import DropdownUser from "./DropdownUser";
 
 //Redux
 import { connect } from "react-redux";
 import { setHideSidebar } from "../actions";
 
 const Header = (props) => {
-  const { hideSidebar, user } = props;
+  const { hideSidebar } = props;
   return (
     <>
       <div
@@ -21,28 +23,7 @@ const Header = (props) => {
             setHideSidebar(!hideSidebar);
           }}
         />
-        <div
-          className={`flex justify-center items-center px-2 py-1 rounded-md cursor-pointer hover:bg-slate-100 duration-500`}
-        >
-          <div
-            className={`flex flex-col items-end justify-center whitespace-nowrap`}
-          >
-            <div className={`m-0 text-left font-semibold select-none`}>
-              {user.name}
-            </div>
-            <div className={`mt-[-5px] text-sm text-left select-none`}>
-              {user.role}
-            </div>
-          </div>
-          <div
-            className={`w-[32px] h-[32px] ml-2 rounded-full border border-slate-50 overflow-hidden flex justify-center items-center`}
-          >
-            <FontAwesomeIcon
-              icon={faUser}
-              className={`w-[24px] h-[24px] text-slate-400`}
-            />
-          </div>
-        </div>
+        <DropdownUser />
       </div>
       <div className={`overflow-x-hidden overflow-y-auto`}></div>
     </>

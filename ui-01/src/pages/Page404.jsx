@@ -16,7 +16,7 @@ const Page404 = () => (
         <div className={`font-light my-4 text-slate-600`}>
           Esta página no se encuentra disponible
         </div>
-        <Button data={{ title: `Regresar`, to: `/dashboart` }} />
+        <Button data={{ title: `Regresar`, to: `/dashboard` }} />
       </div>
     </div>
   </div>

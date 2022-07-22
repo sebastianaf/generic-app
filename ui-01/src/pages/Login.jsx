@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate, Link, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import ActionButton from "../components/ActionButton";
 import errorCodes from "../config/errorCodes";
@@ -11,28 +11,20 @@ import api from "../config/api";
 //Redux
 import { connect } from "react-redux";
 import { setModalOpen, setModalOptions, setLoading, setUser } from "../actions";
-import { useEffect } from "react";
 
 const Login = (props) => {
   const { user, loading, setUser } = props;
 
   //Modal props
-  const { modalOptions, modalOpen, setModalOpen, setModalOptions, setLoading } =
-    props;
+  const { modalOpen, setModalOpen, setModalOptions, setLoading } = props;
 
   const [alias, setAlias] = useState("");
   const [password, setPassword] = useState("");
 
-  let navigate = useNavigate();
-
-  useEffect(() => {
-    setUser({ ...user, none: true });
-  }, []);
-
   /**
    * 1. Check if the fields are empty
    * 2. If the fields aren't empty fetch the token
-   * 3. If the API response is OK then navigate to dashboart
+   * 3. If the API response is OK then navigate to dashboard
    */
   const login = async () => {
     try {
@@ -51,8 +43,8 @@ const Login = (props) => {
         if (!res.output) {
           setLoading(false);
           localStorage.setItem("token", res.token);
+          window.location.reload(true);
           setUser({ name: res.name, role: "role" });
-          navigate(`/dashboart`);
         } else {
           const { data } = res;
           setModalOptions({
@@ -99,13 +91,7 @@ const Login = (props) => {
               Iniciar sesión
             </h2>
             <p className={`mt-2 text-center text-sm text-slate-600`}>
-              o también{" "}
-              <Link
-                to={`#`}
-                className={`font-medium text-cyan-600 hover:text-cyan-500`}
-              >
-                Registratre
-              </Link>
+              Bienvenido
             </p>
           </div>
           <form className={`mt-8 space-y-6`} action={`#`} method={`POST`}>
@@ -143,32 +129,6 @@ const Login = (props) => {
               </div>
             </div>
 
-            <div className={`flex items-center justify-between`}>
-              <div className={`flex items-center`}>
-                <input
-                  id={`remember-me`}
-                  name={`remember-me`}
-                  type={`checkbox`}
-                  className={`h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-gray-300 rounded`}
-                />
-                <label
-                  htmlFor={`remember-me`}
-                  className={`ml-2 block text-sm text-gray-900`}
-                >
-                  Recuerdame
-                </label>
-              </div>
-
-              <div className={`text-sm`}>
-                <Link
-                  to={`#`}
-                  className={`font-medium text-cyan-600 hover:text-cyan-500`}
-                >
-                  Olvidaste la contraseña?
-                </Link>
-              </div>
-            </div>
-
             <div>
               <ActionButton
                 onClick={login}
@@ -181,7 +141,7 @@ const Login = (props) => {
       </div>
     </div>
   ) : (
-    <Navigate to={`/dashboart`} />
+    <Navigate to={`/dashboard`} />
   );
 };
 
@@ -190,7 +150,6 @@ const mapState = (state) => {
     user: state.user,
     //Modal props
     modalOpen: state.modalOpen,
-    modalOptions: state.modalOpen,
     loading: state.loading,
   };
 };

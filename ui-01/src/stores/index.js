@@ -1,9 +1,10 @@
 //Redux
 import { createStore } from "redux";
 import reducer from "../reducers";
+import app from "../config/app";
 
 const initialState = {
-  app: { name: `generic-front`, version: `1.5.0` },
+  app,
   user: null,
   open: true,
   modalOpen: false,

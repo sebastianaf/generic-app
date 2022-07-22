@@ -1,7 +1,4 @@
 {
-  "name": "generic-front",
-  "version": "0.1.0",
-  "private": true,
   "dependencies": {
     "@faker-js/faker": "^7.3.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",

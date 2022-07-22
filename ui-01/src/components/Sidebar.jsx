@@ -37,7 +37,7 @@ const Sidebar = (props) => {
         <ul className={`py-4 px-1`}>
           <SidebarTitle data={{ title: `sections` }} />
           <SidebarItem
-            data={{ title: `Dashboart`, icon: faChartLine, to: `/dashboart` }}
+            data={{ title: `Dashboard`, icon: faChartLine, to: `/dashboard` }}
           />
         </ul>
       </div>

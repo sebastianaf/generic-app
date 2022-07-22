@@ -1,15 +1,15 @@
 import React from "react";
 import DefaultLayout from "../layout/DefaultLayout";
 import ProtectedRoute from "../routes/ProtectedRoute";
-import DashboartLayout from "../layout/DashboartLayout2";
+import DashboardLayout from "../layout/DashboardLayout";
 
-const Dashboart = () => {
+const Dashboard = () => {
   return (
     <ProtectedRoute>
       <DefaultLayout>
-        <DashboartLayout />
+        <DashboardLayout />
       </DefaultLayout>
     </ProtectedRoute>
   );
 };
-export default Dashboart;
+export default Dashboard;

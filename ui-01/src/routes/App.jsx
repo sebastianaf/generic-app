@@ -11,7 +11,7 @@ import { setUser } from "../actions";
 import Spinner from "../components/Spinner";
 
 const Login = React.lazy(() => import("../pages/Login"));
-const Dashboart = React.lazy(() => import("../pages/Dashboart"));
+const Dashboard = React.lazy(() => import("../pages/Dashboard"));
 const Page404 = React.lazy(() => import("../pages/Page404"));
 
 const App = (props) => {
@@ -23,6 +23,7 @@ const App = (props) => {
       setUser(user);
     };
     checking();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -37,10 +38,10 @@ const App = (props) => {
       >
         <Routes>
           <Route exact path={`/login`} element={<Login />} />
-          <Route exact path={`/dashboart`} element={<Dashboart />} />
+          <Route exact path={`/dashboard`} element={<Dashboard />} />
 
           {/* Route corrections */}
-          <Route exact path={`/`} element={<Navigate to={`/dashboart`} />} />
+          <Route exact path={`/`} element={<Navigate to={`/dashboard`} />} />
           <Route path={`*`} element={<Page404 />} />
         </Routes>
       </Suspense>

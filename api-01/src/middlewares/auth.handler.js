@@ -23,7 +23,6 @@ const authHandler = (req, res, next) => {
       }
     }
   } catch (error) {
-    //console.log(error);
     res.status(403).send(boom.unauthorized());
     next(boom.unauthorized());
   }

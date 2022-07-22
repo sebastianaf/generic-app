@@ -1,3 +1,3 @@
-const publicRoutes = [`/api/users/login`];
+const publicRoutes = [`/api/users/login`, `/db-check`];
 
 export default publicRoutes;

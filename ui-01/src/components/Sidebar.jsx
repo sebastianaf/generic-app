@@ -9,7 +9,7 @@ import logo from "../assets/img/logo.png";
 import { connect } from "react-redux";
 import { setOpen } from "../actions";
 
-import "../styles/Practice.css";
+import "../styles/index.css";
 
 const Sidebar = (props) => {
   const { open, setOpen, hideSidebar, app } = props;

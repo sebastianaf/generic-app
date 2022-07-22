@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Navigate, Link, useNavigate } from "react-router-dom";
 
 import ActionButton from "../components/ActionButton";
+import errorCodes from "../config/errorCodes";
 
 import logo from "../assets/img/logo.png";
 import headers from "../config/headers";
@@ -9,55 +10,80 @@ import api from "../config/api";
 
 //Redux
 import { connect } from "react-redux";
+import { setModalOpen, setModalOptions, setLoading, setUser } from "../actions";
+import { useEffect } from "react";
 
 const Login = (props) => {
-  const { user } = props;
+  const { user, loading, setUser } = props;
 
-  const [typedUser, setTypedUser] = useState("");
-  const [typedPassword, setTypedPassword] = useState("");
-  const [danger, setDanger] = useState(false);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  //Modal props
+  const { modalOptions, modalOpen, setModalOpen, setModalOptions, setLoading } =
+    props;
+
+  const [alias, setAlias] = useState("");
+  const [password, setPassword] = useState("");
 
   let navigate = useNavigate();
 
+  useEffect(() => {
+    setUser({ ...user, none: true });
+  }, []);
+
+  /**
+   * 1. Check if the fields are empty
+   * 2. If the fields aren't empty fetch the token
+   * 3. If the API response is OK then navigate to dashboart
+   */
   const login = async () => {
     try {
-      if (typedUser !== "" && typedPassword !== "") {
-        var req = {
+      if (alias !== "" && password !== "") {
+        const req = {
           headers,
           body: JSON.stringify({
-            typedUser,
-            typedPassword,
+            alias,
+            password,
           }),
           method: "POST",
         };
-
-        const data = await fetch(`${api.host}/login`, req);
+        setLoading(true);
+        const data = await fetch(`${api.host}/api/users/login`, req);
         const res = await data.json();
-        if (res.error === null) {
-          setLoading(true);
+        if (!res.output) {
+          setLoading(false);
           localStorage.setItem("token", res.token);
-          navigate(`/asdas`);
+          setUser({ name: res.name, role: "role" });
+          navigate(`/dashboart`);
         } else {
-          setLoading(true);
-          setMessage(res.error);
-          setDanger(!danger);
+          const { data } = res;
+          setModalOptions({
+            title: data.title,
+            description: data.description,
+            error: true,
+          });
+          setModalOpen(!modalOpen);
         }
       } else {
         setLoading(true);
-        setMessage("Datos de inicio incompletos");
-        setDanger(!danger);
+        setModalOptions({
+          title: errorCodes.INCOMPLETE_USER_OR_PASSWORD.title,
+          description: errorCodes.INCOMPLETE_USER_OR_PASSWORD.description,
+          error: true,
+        });
+        setModalOpen(!modalOpen);
       }
     } catch (error) {
-      console.log(error);
-      setMessage("Error de conexión, intenta de nuevo");
-      setDanger(!danger);
       setLoading(true);
+      setModalOptions({
+        title: errorCodes.CONECTION_ERROR.title,
+        description: errorCodes.CONECTION_ERROR.description,
+        error: true,
+      });
+      setModalOpen(!modalOpen);
+      console.log(error);
     }
   };
 
-  return !user.name ? (
+  return !user ? (
     <div className={`flex items-center justify-center min-h-screen`}>
       <div
         className={`min-h-full max-w-lg mx-4 grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-200 border rounded-lg  shadow-md`}
@@ -97,7 +123,7 @@ const Login = (props) => {
                   required
                   className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm`}
                   placeholder={`Usuario`}
-                  onChange={(e) => setTypedUser(e.target.value)}
+                  onChange={(e) => setAlias(e.target.value)}
                 />
               </div>
               <div>
@@ -112,7 +138,7 @@ const Login = (props) => {
                   required
                   className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 focus:z-10 sm:text-sm`}
                   placeholder={`Contraseña`}
-                  onChange={(e) => setTypedPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
@@ -145,10 +171,7 @@ const Login = (props) => {
 
             <div>
               <ActionButton
-                onClick={() => {
-                  setLoading(!loading);
-                  login();
-                }}
+                onClick={login}
                 loading={loading}
                 data={{ title: `Iniciar` }}
               />
@@ -165,7 +188,18 @@ const Login = (props) => {
 const mapState = (state) => {
   return {
     user: state.user,
+    //Modal props
+    modalOpen: state.modalOpen,
+    modalOptions: state.modalOpen,
+    loading: state.loading,
   };
 };
 
-export default connect(mapState, null)(Login);
+const mapProps = {
+  setModalOpen,
+  setModalOptions,
+  setLoading,
+  setUser,
+};
+
+export default connect(mapState, mapProps)(Login);

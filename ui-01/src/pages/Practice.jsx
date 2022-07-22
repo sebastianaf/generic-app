@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faBars, faUser } from "@fortawesome/free-solid-svg-icons";
 
-import "../styles/Practice.css";
+import "../styles/index.css";
 import logo from "../assets/img/logo.png";
 
 const Practice = () => {

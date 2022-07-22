@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
-import "../styles/Practice.css";
+import "../styles/index.css";
 
 //Redux
 import { connect } from "react-redux";
@@ -9,8 +9,6 @@ import { setHideSidebar } from "../actions";
 
 const Header = (props) => {
   const { hideSidebar, user } = props;
-  //pending
-  console.log(hideSidebar);
   return (
     <>
       <div

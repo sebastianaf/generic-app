@@ -1,8 +1,10 @@
 import { Navigate } from "react-router-dom";
-import { store } from "../stores";
+import { store } from "../stores/index";
 
 const ProtectedRoute = ({ children }) => {
-  return store.getState().user.name ? children : <Navigate to={`/login`} />;
+  const user = store.getState().user;
+  console.log(user);
+  return user ? children : <Navigate to={`/login`} />;
 };
 
 export default ProtectedRoute;

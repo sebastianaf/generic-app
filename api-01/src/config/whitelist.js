@@ -1,7 +1,6 @@
 const whitelist = [
-  `http://${process.env.API_CLIENT}`,
-  `https://${process.env.API_CLIENT}`,
-  "http://localhost",
+  `${process.env.API_CLIENT}`,
+  "http://localhost:3000",
 ];
 
 export default whitelist;

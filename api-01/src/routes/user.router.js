@@ -47,4 +47,13 @@ router.post(
   }
 );
 
+router.post("/check", async (req, res, next) => {
+  try {
+    const checkedData = await service.check(req.headers.token);
+    res.send(checkedData);
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

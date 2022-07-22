@@ -1,8 +1,10 @@
 import sequelize from "../db/sequelize";
-const boom = require("@hapi/boom");
+import boom from "@hapi/boom";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { MD5, AES, SHA256 } from "crypto-js";
+import { encrypt, decrypt } from "../tools/encryption";
+
+import errorCodes from "../config/errorCodes";
 
 const { models } = sequelize;
 
@@ -12,7 +14,7 @@ class UserService {
   async login(data) {
     const { alias, password } = data;
     /**
-     * 1. Check the typedAlias in the database
+     * 1. Check the alias in the database
      * 2. Compare the password
      * 3. If the password is correct return a token
      */
@@ -24,27 +26,39 @@ class UserService {
         let token = jwt.sign({ ...user.dataValues }, process.env.API_TOKEN, {
           expiresIn: process.env.API_TOKEN_EXPIRATION_TIME,
         });
-        token = AES.encrypt(
-          token,
-          SHA256(process.env.API_TOKEN).toString()
-        ).toString();
-        return { ...user.dataValues, token };
+        token = encrypt(token);
+        return { token };
       }
     }
-    return boom.unauthorized("Invalid alias or password");
+    return boom.badRequest("", errorCodes.BAD_USER_OR_PASSWORD);
   }
 
   async register(data) {
-    const { alias, name, password, idUser } = data;
-    const salt = await bcryptjs.genSalt(10);
-    const encryptedPassword = await bcryptjs.hash(password, salt);
-    const newUser = models.User.create({
-      password: encryptedPassword,
-      alias,
-      idUser,
-      name,
-    });
-    return newUser;
+    try {
+      const { alias, name, password, role, idUser } = data;
+      const salt = await bcryptjs.genSalt(10);
+      const encryptedPassword = await bcryptjs.hash(password, salt);
+      const newUser = models.User.create({
+        password: encryptedPassword,
+        alias,
+        idUser,
+        name,
+        role,
+      });
+      return newUser;
+    } catch (error) {
+      console.log(error);
+      return boom.badRequest(error);
+    }
+  }
+
+  async check(token) {
+    try {
+      const decrypted = decrypt(token);
+      return decrypted;
+    } catch (error) {
+      return boom.unauthorized();
+    }
   }
 
   async find() {

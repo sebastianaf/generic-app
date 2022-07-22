@@ -6,13 +6,14 @@ import fs from "fs";
 
 import whitelist from "./config/whitelist";
 import { morganOptions } from "./config/morgan";
-import db from "./config/db";
+import boom from "@hapi/boom";
 import log from "./config/log";
 import sequelize from "./db/sequelize";
 import { toInteger } from "lodash";
 import { logCheck } from "./tools/log";
 import auth from "./middlewares/auth.handler";
 import routerAPI from "./routes";
+import errorCodes from "./config/errorCodes";
 
 require("dotenv").config();
 
@@ -48,13 +49,13 @@ app.use(morgan(morganOptions));
 /***
  * Routes
  */
-app.get("/test-db", async (req, res) => {
+app.post("/db-check", async (req, res) => {
   try {
     await sequelize.authenticate();
-    res.send("Connection has been established successfully");
+    res.send(true);
   } catch (error) {
-    res.send("Unable to connect to the database");
-    console.log(error);
+    res.send(false);
+    //console.log(error);
   }
 });
 

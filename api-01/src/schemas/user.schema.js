@@ -1,15 +1,17 @@
 import Joi from "joi";
 
 const id = Joi.number();
-const name = Joi.string().min(4);
-const alias = Joi.string().min(4);
-const password = Joi.string().min(4);
+const name = Joi.string().min(2);
+const alias = Joi.string().min(2);
+const password = Joi.string().min(2);
+const role = Joi.string().min(2);
 const idUser = Joi.number();
 
 const createUserSchema = Joi.object({
   name: name.required(),
   alias: alias.required(),
   password: password.required(),
+  role: role.required(),
   idUser: idUser.required(),
 });
 

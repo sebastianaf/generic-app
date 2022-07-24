@@ -14,6 +14,8 @@ Now let's follow the next steps.
 
 Create a `.env` from `.env.example` file in the root folder with all environment variables, this variables will be used by the containers, it need to be reached by `docker-compose.yml` file.
 
+Inside `ui-01` make sure to create `.env.production` for production environment or just `.env` for development environment. (Based on [create-react-app](https://create-react-app.dev/))
+
 ### 2.Change `org` and `project` names
 
 It's recommend to change all the names in files and lines (in `docker-compose.yml` and `Dockerfile`'s files) named with `org` and `project` with your own organization name and project name.

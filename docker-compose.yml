@@ -1,9 +1,9 @@
 version: "3.8"
 
 services:
-  org-project-api-01:
-    container_name: org-project-api-01
-    image: org-project-api-01
+  org-project-api:
+    container_name: org-project-api
+    image: org-project-api
     restart: always
     environment:
       API_PORT: ${API_PORT}
@@ -16,7 +16,7 @@ services:
       DB_HOST: ${DB_HOST}
       TZ: ${TZ}
     build:
-      context: ./api-01
+      context: ./api
       dockerfile: Dockerfile
       args:
         API_PORT: ${API_PORT}
@@ -27,8 +27,8 @@ services:
     networks:
       - org-project
 
-  org-project-db-01:
-    container_name: org-project-db-01
+  org-project-db:
+    container_name: org-project-db
     restart: always
     image: postgres:latest
     environment:
@@ -37,28 +37,29 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
       TZ: ${TZ}
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - ./db-files:/var/lib/postgresql/data
     ports:
       - 9020:5432
     networks:
       - org-project
 
-  org-project-ui-01:
-    container_name: org-project-ui-01
-    image: org-project-ui-01
+  org-project-ui:
+    container_name: org-project-ui
+    image: org-project-ui
     restart: always
     environment:
-      UI_PORT: ${UI_PORT}
-      API_HOST: ${API_HOST}
+      REACT_APP_UI_PORT: ${REACT_APP_UI_PORT}
+      REACT_APP_API_HOST: ${REACT_APP_API_HOST}
     build:
-      context: ./ui-01
+      context: ./ui
       dockerfile: Dockerfile
       args:
-        UI_PORT: ${UI_PORT}
+        REACT_APP_UI_PORT: ${REACT_APP_UI_PORT}
+        REACT_APP_API_HOST: ${REACT_APP_API_HOST}
     depends_on:
-      - org-project-api-01
+      - org-project-api
     ports:
-      - 9030:${UI_PORT}
+      - 9030:${REACT_APP_UI_PORT}
     networks:
       - org-project
 

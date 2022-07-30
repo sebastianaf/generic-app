@@ -8,7 +8,7 @@ import check from "../tools/check";
 import { connect } from "react-redux";
 import { setUser } from "../actions";
 
-import Spinner from "../components/Spinner";
+import Loading from "../pages/Loading";
 
 const Login = React.lazy(() => import("../pages/Login"));
 const Dashboard = React.lazy(() => import("../pages/Dashboard"));
@@ -23,19 +23,12 @@ const App = (props) => {
       setUser(user);
     };
     checking();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <BrowserRouter>
-      <Suspense
-        fallback={
-          <div className="flex justify-center items-center h-screen bg-slate-100">
-            <Spinner loading />
-            <div className="text-xl">Loading...</div>
-          </div>
-        }
-      >
+      <Suspense fallback={<Loading />}>
         <Routes>
           <Route exact path={`/login`} element={<Login />} />
           <Route exact path={`/dashboard`} element={<Dashboard />} />

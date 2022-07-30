@@ -8,10 +8,10 @@ const DefaultLayout = (props) => {
   return (
     <div className={`flex flex-row`}>
       <Sidebar />
-      <div className={`flex flex-col bg-white w-full max-h-screen`}>
+      <div className={`flex flex-col bg-white w-full min-h-screen max-h-screen`}>
         <Header />
         <div
-          className={`flex justify-center flex-grow items-start overflow-x-hidden overflow-y-auto p-1 md:p-2`}
+          className={`flex justify-center flex-grow items-start overflow-x-hidden overflow-y-auto p-1 md:p-5 bg-slate-100`}
         >
           {children}
         </div>

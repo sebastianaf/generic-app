@@ -18,7 +18,7 @@ Inside `ui-01` make sure to create `.env.production` for production environment 
 
 ### 2.Change `org` and `project` names
 
-It's recommend to change all the names in files and lines (in `docker-compose.yml` and `Dockerfile`'s files) named with `org` and `project` with your own organization name and project name.
+It's recommend to change all the names in files and lines (in `docker-compose.yml` and `Dockerfile`'s files) named with `org` and `project` with your own organization name and project name. It's neccesary to change the manifiest.json file with the correct names of the app.
 
 ### 3.Setting up a reverse proxy (Optional)
 

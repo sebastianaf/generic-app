@@ -6,14 +6,15 @@ import fs from "fs";
 
 import whitelist from "./config/whitelist";
 import { morganOptions } from "./config/morgan";
-import boom from "@hapi/boom";
 import log from "./config/log";
 import sequelize from "./db/sequelize";
 import { toInteger } from "lodash";
 import { logCheck } from "./tools/log";
 import auth from "./middlewares/auth.handler";
 import routerAPI from "./routes";
-import errorCodes from "./config/errorCodes";
+
+import UserService from "./services/user.service";
+const service = new UserService();
 
 require("dotenv").config();
 
@@ -36,15 +37,25 @@ app.use(cors(corsOptions));
 app.use(auth);
 app.use(express.json()); // for parsing application/json
 //app.use(express.urlencoded({ extended: true }));
-toInteger(process.env.API_LOG)
-  ? app.use(
-      morgan(morganOptions, {
-        stream: fs.createWriteStream(log.filePath, { flags: "a" }),
-      })
-    )
-  : null;
 app.use(helmet());
 app.use(morgan(morganOptions));
+
+toInteger(process.env.API_CREATE_ADMIN) === 1 &&
+  (async () => {
+    try {
+      const user = await service.createfirstUser();
+      console.log(`First user created succesfully ${user}`);
+    } catch (error) {
+      console.log(`Error creating first user: ${error}`);
+    }
+  })();
+
+toInteger(process.env.API_LOG) === 1 &&
+  app.use(
+    morgan(morganOptions, {
+      stream: fs.createWriteStream(log.filePath, { flags: "a" }),
+    })
+  );
 
 /***
  * Routes
@@ -55,7 +66,6 @@ app.post("/db-check", async (req, res) => {
     res.send(true);
   } catch (error) {
     res.send(false);
-    //console.log(error);
   }
 });
 

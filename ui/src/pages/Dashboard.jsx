@@ -8,7 +8,11 @@ const Dashboard = () => {
     <ProtectedRoute>
       <DefaultLayout>
         <DashboardLayout>
-          <div className="min-h-[800px]">This is the first layout</div>
+          <div className="min-h-[800px]">
+            <div className="text-lg md:text-xl font-bold m-3 md:m-5">
+              Dashboard
+            </div>
+          </div>
         </DashboardLayout>
       </DefaultLayout>
     </ProtectedRoute>

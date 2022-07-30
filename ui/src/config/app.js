@@ -1,5 +1,5 @@
 const app = {
-    name: "generic-ui",
+    name: "generic-app",
     version: "1.6.0"
 }
 

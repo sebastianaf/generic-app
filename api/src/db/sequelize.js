@@ -1,26 +1,54 @@
 import { Sequelize } from "sequelize";
-import db from "../config/db";
+import { dbUsers, dbData } from "../config/db";
 import { setupModels } from "./models";
 
-const { database, host, password, port, user } = db;
-
-const sequelize = new Sequelize(database, user, password, {
+/**
+ * ------------------------ [ DATABASE 01 - USERS ] ------------------------
+ */
+/* const sequelizeUsers = new Sequelize(database, user, password, {
   dialect: "postgres",
   logging: false,
   host,
   port,
 });
+ */
+/**
+ * Setup the models to Sequelize
+ */
+/* console.log(`-----------Septing up models-----------`);
+setupModels(sequelizeUsers);
+ */
+/**
+ * Sync the models with the database
+ */
+console.log(`-----------Syncing models-----------`);
+/* sequelizeUsers.sync({ force: false }); */
+
+/**
+ * ------------------------ [ DATABASE 02 - DATA ] ------------------------
+ */
+const sequelizeData = new Sequelize(
+  dbData.database,
+  dbData.user,
+  dbData.password,
+  {
+    dialect: "postgres",
+    logging: false,
+    host: dbData.host,
+    port: dbData.port,
+  }
+);
 
 /**
  * Setup the models to Sequelize
  */
 console.log(`-----------Septing up models-----------`);
-setupModels(sequelize);
+setupModels(sequelizeData);
 
 /**
  * Sync the models with the database
  */
 console.log(`-----------Syncing models-----------`);
-sequelize.sync({ force: false });
+sequelizeData.sync({ force: false });
 
-export default sequelize;
+export { sequelizeData, sequelizeUsers };

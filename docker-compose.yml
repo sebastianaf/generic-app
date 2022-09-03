@@ -12,36 +12,55 @@ services:
       API_CREATE_ADMIN: ${API_CREATE_ADMIN}
       API_TOKEN: ${API_TOKEN}
       API_TOKEN_EXPIRATION_TIME: ${API_TOKEN_EXPIRATION_TIME}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
+      DB_USERS_DATABASE: ${DB_USERS_DATABASE}
+      DB_USERS_USER: ${DB_USERS_USER}
+      DB_USERS_PASSWORD: ${DB_USERS_PASSWORD}
+      DB_USERS_HOST: ${DB_USERS_HOST}
+      DB_DATA_DATABASE: ${DB_DATA_DATABASE}
+      DB_DATA_USER: ${DB_DATA_USER}
+      DB_DATA_PASSWORD: ${DB_DATA_PASSWORD}
+      DB_DATA_HOST: ${DB_DATA_HOST}
       TZ: ${TZ}
     build:
       context: ./api
       dockerfile: Dockerfile
       args:
         API_PORT: ${API_PORT}
-    ports:
-      - 9010:${API_PORT}
+#    ports:
+#      - 9011:${API_PORT}
     depends_on:
       - org-project-db
     networks:
       - org-project
 
-  org-project-db:
-    container_name: org-project-db
+org-project-db-01:
+    container_name: org-project-db-01
+    image: mongo:4.4.15
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERS_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_USERS_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_USERS_DATABASE}
+    volumes:
+      - ./db-files:/data/db
+#    ports:
+#      - 9021:27017
+    networks:
+      - org-project
+
+  org-project-db-02:
+    container_name: org-project-db-02
     restart: always
     image: postgres:latest
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_DATA_USER}
+      POSTGRES_PASSWORD: ${DB_DATA_PASSWORD}
+      POSTGRES_DB: ${DB_DATA_DATABASE}
       TZ: ${TZ}
     volumes:
       - ./db-files:/var/lib/postgresql/data
-    ports:
-      - 9020:5432
+#    ports:
+#      - 9022:5432
     networks:
       - org-project
 
@@ -60,8 +79,21 @@ services:
         REACT_APP_API_HOST: ${REACT_APP_API_HOST}
     depends_on:
       - org-project-api
-    ports:
-      - 9030:${REACT_APP_UI_PORT}
+#    ports:
+#      - 9031:${REACT_APP_UI_PORT}
+    networks:
+      - org-project
+
+  org-project-mongo-express:
+    container_name: org-project-mongo-express
+    image: mongo-express
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USERS_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_USERS_PASSWORD}
+      ME_CONFIG_MONGODB_URL: ${DB_USERS_MONGO_URL}
+#    ports:
+#      - 9041:8081
     networks:
       - org-project
 
@@ -74,8 +106,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
     depends_on:
       - org-project-db
-    ports:
-      - 9040:80
+#    ports:
+#      - 9042:80
     networks:
       - org-project
 

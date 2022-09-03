@@ -33,7 +33,7 @@ services:
     networks:
       - org-project
 
-org-project-db-01:
+  org-project-db-01:
     container_name: org-project-db-01
     image: mongo:4.4.15
     restart: always

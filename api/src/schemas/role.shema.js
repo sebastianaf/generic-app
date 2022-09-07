@@ -1,9 +1,27 @@
 import Joi from "joi";
 
-const id = Joi.number();
+const _id = Joi.number();
+const name = Joi.string().min(2);
 
-const getRoleSchema = Joi.object({
-  id: id.required(),
+const getIdQueryRoleSchema = Joi.object({
+  _id,
 });
 
-export { getRoleSchema };
+const getIdRoleSchema = Joi.object({
+  _id: _id.required(),
+});
+
+const postRoleSchema = Joi.object({
+  name: name.required(),
+});
+
+const patchRoleSchema = Joi.object({
+  name: name.required(),
+});
+
+export {
+  getIdQueryRoleSchema,
+  getIdRoleSchema,
+  postRoleSchema,
+  patchRoleSchema,
+};

@@ -1,34 +1,38 @@
 import Joi from "joi";
 
-const id = Joi.number();
+const _id = Joi.number();
 const name = Joi.string().min(2);
 const alias = Joi.string().min(2);
 const password = Joi.string().min(2);
-const role = Joi.string().min(2);
-const idUser = Joi.number();
+const roleId = Joi.string().min(2);
+const userId = Joi.number();
 
-const createUserSchema = Joi.object({
+const postUserSchema = Joi.object({
   name: name.required(),
   alias: alias.required(),
   password: password.required(),
-  role: role.required(),
-  idUser: idUser.required(),
+  roleId: roleId.required(),
+  userId: userId.required(),
 });
 
-const updateUserSchema = Joi.object({
-  name: name,
-  alias: alias.required(),
-  password: password,
-  idUser: idUser.required(),
+const patchUserSchema = Joi.object({
+  name,
+  alias,
+  password,
+  roleId,
 });
 
-const getUserSchema = Joi.object({
-  id: id.required(),
+const getIdUserSchema = Joi.object({
+  _id: _id.required(),
 });
 
-const loginUserSchema = Joi.object({
-  alias: alias.required(),
-  password: password.required(),
+const getIdQueryUserSchema = Joi.object({
+  _id,
 });
 
-export { createUserSchema, updateUserSchema, getUserSchema, loginUserSchema };
+export {
+  postUserSchema,
+  patchUserSchema,
+  getIdUserSchema,
+  getIdQueryUserSchema,
+};

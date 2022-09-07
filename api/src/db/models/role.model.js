@@ -24,7 +24,12 @@ const RoleSchema = {
 };
 
 class Role extends Model {
-  static associate() {}
+  static associate(models) {
+    this.hasMany(models.User, {
+      as: "roles",
+      foreignKey: "roleId"
+    });
+  }
 
   static config(sequelize) {
     return {

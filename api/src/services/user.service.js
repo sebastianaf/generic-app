@@ -1,26 +1,76 @@
 import sequelize from "../db/sequelize";
 import boom from "@hapi/boom";
 import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { encrypt, decrypt } from "../tools/encryption";
-
 import errorCodes from "../config/errorCodes";
+import RoleService from "./role.service";
 
+const roleService = new RoleService();
 const { models } = sequelize;
 
 class UserService {
   constructor() {}
 
-  async createfirstUser() {
-    const obj = await models.User.findOne({ where: { alias: "admin" } });
+  async find(filter) {
+    let obj = await models.User.findAll(filter);
+    return obj;
+  }
 
-    const firstUser = {
+  async update(id, data) {
+    const obj = await models.User.findByPk(id);
+    if (!obj) {
+      throw boom.notFound(
+        errorCodes.DB_NOT_FOUND.title,
+        errorCodes.DB_NOT_FOUND
+      );
+    }
+    const salt = await bcryptjs.genSalt(10);
+    const encryptedPassword = await bcryptjs.hash(data.password, salt);
+    data.password = encryptedPassword;
+    const res = await obj.update(data);
+    return res;
+  }
+
+  async delete(id) {
+    const obj = await models.User.findByPk(id);
+    if (!obj) {
+      throw boom.notFound(
+        errorCodes.DB_NOT_FOUND.title,
+        errorCodes.DB_NOT_FOUND
+      );
+    }
+    await obj.destroy();
+    return { error: null };
+  }
+
+  async findOne(id) {
+    const obj = await models.User.findByPk(id);
+    if (!obj) {
+      throw boom.notFound(
+        errorCodes.DB_NOT_FOUND.title,
+        errorCodes.DB_NOT_FOUND
+      );
+    }
+    return obj;
+  }
+
+  async createfirstUser() {
+    let obj2 = await models.Role.findOne({ where: { name: "admin" } });
+    if (!obj2) {
+      let role = {
+        name: "admin",
+      };
+      roleService.create(role);
+    }
+
+    let firstUser = {
       alias: "admin",
-      password: `admin`,
-      idUser: 1,
+      password: "admin",
+      userId: 1,
       name: "Admin",
-      role: "admin",
+      roleId: 1,
     };
+
+    const obj = await models.User.findOne({ where: { alias: "admin" } });
     const salt = await bcryptjs.genSalt(10);
     const encryptedPassword = await bcryptjs.hash(firstUser.password, salt);
     if (obj) {
@@ -29,66 +79,33 @@ class UserService {
         password: encryptedPassword,
       });
     } else {
-      return this.register({
+      return this.create({
         ...firstUser,
         password: encryptedPassword,
       });
     }
   }
 
-  async login(data) {
-    const { alias, password } = data;
-    /**
-     * 1. Check the alias in the database
-     * 2. Compare the password
-     * 3. If the password is correct return a token
-     */
-    let user = await models.User.findOne({ where: { alias } });
-    if (user) {
-      const correct = await bcryptjs.compare(password, user.password);
-      if (correct) {
-        user.dataValues.password = undefined;
-        let token = jwt.sign({ ...user.dataValues }, process.env.API_TOKEN, {
-          expiresIn: process.env.API_TOKEN_EXPIRATION_TIME,
-        });
-        token = encrypt(token);
-        return { token };
-      }
+  async create(data) {
+    const { alias, name, password, roleId, userId } = data;
+    const obj1 = await models.User.findAll({ where: { name } });
+    const obj2 = await models.User.findAll({ where: { alias } });
+    if (obj1.length > 0 || obj2.length > 0) {
+      throw boom.conflict(
+        errorCodes.DB_DUPLICADE.title,
+        errorCodes.DB_DUPLICADE
+      );
     }
-    return boom.badRequest("", errorCodes.BAD_USER_OR_PASSWORD);
-  }
-
-  async register(data) {
-    try {
-      const { alias, name, password, role, idUser } = data;
-      const salt = await bcryptjs.genSalt(10);
-      const encryptedPassword = await bcryptjs.hash(password, salt);
-      const newUser = models.User.create({
-        password: encryptedPassword,
-        alias,
-        idUser,
-        name,
-        role,
-      });
-      return newUser;
-    } catch (error) {
-      console.log(error);
-      return boom.badRequest(error);
-    }
-  }
-
-  async check(token) {
-    try {
-      const decrypted = decrypt(token);
-      return decrypted;
-    } catch (error) {
-      return boom.unauthorized();
-    }
-  }
-
-  async find() {
-    const res = await models.User.findAll();
-    return res;
+    const salt = await bcryptjs.genSalt(10);
+    const encryptedPassword = await bcryptjs.hash(password, salt);
+    const newUser = await models.User.create({
+      password: encryptedPassword,
+      alias,
+      userId,
+      name,
+      roleId,
+    });
+    return newUser;
   }
 }
 

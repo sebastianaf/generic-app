@@ -8,8 +8,8 @@ const decrypt = (token) => {
     token,
     SHA256(process.env.API_TOKEN).toString()
   ).toString(CryptoJS.enc.Utf8);
-  decryptedToken = jwt.verify(`${decryptedToken}`, process.env.API_TOKEN);
-  return decryptedToken;
+  const decodedToken = jwt.decode(`${decryptedToken}`, process.env.API_TOKEN);
+  return decodedToken;
 };
 
 const encrypt = (token) => {

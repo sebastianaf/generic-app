@@ -3,7 +3,6 @@ import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
 import fs from "fs";
-
 import whitelist from "./config/whitelist";
 import { morganOptions } from "./config/morgan";
 import log from "./config/log";
@@ -11,10 +10,10 @@ import sequelize from "./db/sequelize";
 import { toInteger } from "lodash";
 import { logCheck } from "./tools/log";
 import auth from "./middlewares/auth.handler";
+import roles from "./middlewares/role.handler";
 import routerAPI from "./routes";
-
-import UserService from "./services/user.service";
-const service = new UserService();
+import { initAdminAccess, initAdminUser } from "./tools/initialize";
+import { logErrors, errorHandler } from "./middlewares/error.handler";
 
 require("dotenv").config();
 
@@ -35,22 +34,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(auth);
-app.use(express.json()); // for parsing application/json
-//app.use(express.urlencoded({ extended: true }));
+app.use(roles);
+app.use(express.json());
 app.use(helmet());
 app.use(morgan(morganOptions));
-
-toInteger(process.env.API_CREATE_ADMIN) === 1 &&
-  (async () => {
-    try {
-      setTimeout(async () => {
-        const user = await service.createfirstUser();
-        console.log(`Admin user... OK`);
-      }, 10000);
-    } catch (error) {
-      console.log(`Admin user... FAIL`);
-    }
-  })();
 
 toInteger(process.env.API_LOG) === 1 &&
   app.use(
@@ -59,10 +46,27 @@ toInteger(process.env.API_LOG) === 1 &&
     })
   );
 
+/**
+ * Initialization
+ */
+toInteger(process.env.API_CREATE_ADMIN) === 1 &&
+  (async () => {
+    await initAdminAccess();
+    await initAdminUser();
+  })();
+
 /***
  * Routes
  */
-app.post("/db-check", async (req, res) => {
+app.post("/db-01-check", async (req, res) => {
+  try {
+    //mongooseConn();
+  } catch (error) {
+    res.send(false);
+  }
+});
+
+app.post("/db-02-check", async (req, res) => {
   try {
     await sequelize.authenticate();
     res.send(true);
@@ -72,6 +76,9 @@ app.post("/db-check", async (req, res) => {
 });
 
 routerAPI(app);
+
+app.use(logErrors);
+app.use(errorHandler);
 
 app.listen(process.env.API_PORT, () => {
   console.log(`Running on port ${process.env.API_PORT}`);

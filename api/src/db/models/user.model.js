@@ -1,4 +1,5 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
+import { ROLE_TABLE } from "./role.model";
 
 const USER_TABLE = "users";
 
@@ -25,16 +26,25 @@ const UserSchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  
-  role: {
-    allowNull: false,
-    type: DataTypes.STRING,
+
+  roleId: {
+    allowNull: true,
+    field: "role_id",
+    type: DataTypes.INTEGER,
+    references: {
+      model: ROLE_TABLE,
+      key: "id",
+    },
   },
 
-  idUser: {
-    allowNull: false,
+  userId: {
+    allowNull: true,
     field: "id_user",
     type: DataTypes.INTEGER,
+    references: {
+      model: USER_TABLE,
+      key: "id",
+    },
   },
 
   createAt: {

@@ -1,29 +1,30 @@
 import express from "express";
 
-import RoleService from "../services/role.service";
+import AccessService from "../services/access.service";
 import {
-  getIdRoleSchema,
-  getIdQueryRoleSchema,
-  postRoleSchema,
-  patchRoleSchema,
-} from "../schemas/role.shema";
+  postAccessSchema,
+  patchAccessSchema,
+  getIdAccessSchema,
+  getIdQueryAccessSchema,
+} from "../schemas/access.schema";
 import validatorHandler from "../middlewares/validator.handler";
 
 const router = express.Router();
-const service = new RoleService();
+const service = new AccessService();
 
 router.get(
   "/",
-  validatorHandler(getIdQueryRoleSchema, `query`),
+  validatorHandler(getIdQueryAccessSchema, `query`),
   async (req, res, next) => {
     try {
       let result = [];
       if (req.query._id) {
-        result = await service.findOne(req.query._id);
+        result = await service.find({ _id: req.query._id });
       } else {
         result = await service.find({});
       }
       res.status(200).json(result);
+      next();
     } catch (error) {
       next(error);
     }
@@ -32,10 +33,10 @@ router.get(
 
 router.post(
   "/",
-  validatorHandler(postRoleSchema, `body`),
+  validatorHandler(postAccessSchema, `body`),
   async (req, res, next) => {
     try {
-      const result = await service.create(req.body);
+      const result = await service.save(req.body);
       res.status(200).json(result);
       next();
     } catch (error) {
@@ -46,11 +47,11 @@ router.post(
 
 router.patch(
   "/",
-  validatorHandler(getIdRoleSchema, `query`),
-  validatorHandler(patchRoleSchema, `body`),
+  validatorHandler(getIdAccessSchema, `query`),
+  validatorHandler(patchAccessSchema, `body`),
   async (req, res, next) => {
     try {
-      const result = await service.update(req.query._id, req.body);
+      const result = await service.updateOne(req.query._id, req.body);
       res.status(200).json(result);
       next();
     } catch (error) {
@@ -61,10 +62,10 @@ router.patch(
 
 router.delete(
   "/",
-  validatorHandler(getIdRoleSchema, `query`),
+  validatorHandler(getIdAccessSchema, `query`),
   async (req, res, next) => {
     try {
-      const result = await service.delete(req.query._id);
+      const result = await service.deleteOne(req.query._id);
       res.status(200).json(result);
       next();
     } catch (error) {

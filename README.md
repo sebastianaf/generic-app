@@ -48,9 +48,9 @@ At the end just type
 docker compose -p org-project -up -d --build
 ```
 
-This commands will wake up the services access it through port specified in `$UI_PORT`,`$API_PORT` environment variables.
+This commands will wake up the services access it through port specified in `$UI_PORT`,`$API_PORT` environment variables. it's recommend to asign the next ones.
 
-```JSON
+```
 Server ports:
 9011: api
 9021: db-01
@@ -68,11 +68,5 @@ Username: admin
 Password: admin
 ```
 After first start up set `API_CREATE_ADMIN` to `0`
-
-## Folder contents
-
-```
-See the repo content.
-```
 
 Use this code if you need it, don´t forget to share, have a nice day.

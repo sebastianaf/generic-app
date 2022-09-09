@@ -48,17 +48,7 @@ At the end just type
 docker compose -p org-project -up -d --build
 ```
 
-This commands will wake up the services access it through port specified in `$UI_PORT`,`$API_PORT` environment variables. it's recommend to asign the next ones.
-
-```
-Server ports:
-9011: api
-9021: db-01
-9022: db-02
-9031: ui
-9041: pgadmin  
-9042: mongo-express
-```
+This commands will wake up the services access it through port specified in `$*_PORT` environment variables.
 
 Nevertheless is recomended to use a docker private network with a reverse proxy.
 

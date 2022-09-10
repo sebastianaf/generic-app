@@ -1,7 +1,5 @@
 import sequelize from "../db/sequelize";
-import boom from "@hapi/boom";
 import bcryptjs from "bcryptjs";
-import errorCodes from "../config/errorCodes";
 import RoleService from "./role.service";
 
 const roleService = new RoleService();
@@ -17,12 +15,6 @@ class UserService {
 
   async update(id, data) {
     const obj = await models.User.findByPk(id);
-    if (!obj) {
-      throw boom.notFound(
-        errorCodes.DB_NOT_FOUND.title,
-        errorCodes.DB_NOT_FOUND
-      );
-    }
     const salt = await bcryptjs.genSalt(10);
     const encryptedPassword = await bcryptjs.hash(data.password, salt);
     data.password = encryptedPassword;
@@ -32,24 +24,12 @@ class UserService {
 
   async delete(id) {
     const obj = await models.User.findByPk(id);
-    if (!obj) {
-      throw boom.notFound(
-        errorCodes.DB_NOT_FOUND.title,
-        errorCodes.DB_NOT_FOUND
-      );
-    }
     await obj.destroy();
     return { error: null };
   }
 
   async findOne(id) {
     const obj = await models.User.findByPk(id);
-    if (!obj) {
-      throw boom.notFound(
-        errorCodes.DB_NOT_FOUND.title,
-        errorCodes.DB_NOT_FOUND
-      );
-    }
     return obj;
   }
 
@@ -88,14 +68,6 @@ class UserService {
 
   async create(data) {
     const { alias, name, password, roleId, userId } = data;
-    const obj1 = await models.User.findAll({ where: { name } });
-    const obj2 = await models.User.findAll({ where: { alias } });
-    if (obj1.length > 0 || obj2.length > 0) {
-      throw boom.conflict(
-        errorCodes.DB_DUPLICADE.title,
-        errorCodes.DB_DUPLICADE
-      );
-    }
     const salt = await bcryptjs.genSalt(10);
     const encryptedPassword = await bcryptjs.hash(password, salt);
     const newUser = await models.User.create({

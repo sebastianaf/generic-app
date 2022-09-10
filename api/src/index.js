@@ -13,7 +13,12 @@ import auth from "./middlewares/auth.handler";
 import roles from "./middlewares/role.handler";
 import routerAPI from "./routes";
 import { initAdminAccess, initAdminUser } from "./tools/initialize";
-import { logErrors, errorHandler } from "./middlewares/error.handler";
+import {
+  logErrors,
+  boomErrorHandler,
+  errorHandler,
+  ormErrorHandler,
+} from "./middlewares/error.handler";
 
 require("dotenv").config();
 
@@ -78,6 +83,8 @@ app.post("/db-02-check", async (req, res) => {
 routerAPI(app);
 
 app.use(logErrors);
+app.use(ormErrorHandler);
+app.use(boomErrorHandler);
 app.use(errorHandler);
 
 app.listen(process.env.API_PORT, () => {

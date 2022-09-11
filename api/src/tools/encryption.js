@@ -6,7 +6,7 @@ require("dotenv").config();
 const decrypt = (token) => {
   let decryptedToken = AES.decrypt(
     token,
-    SHA256(process.env.API_TOKEN).toString()
+    SHA256(process.env.API_TOKEN_SIGN).toString()
   ).toString(CryptoJS.enc.Utf8);
   const freshToken = jwt.verify(`${decryptedToken}`, process.env.API_TOKEN_SIGN);
   if (freshToken) {

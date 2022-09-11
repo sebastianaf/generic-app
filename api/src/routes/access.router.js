@@ -23,7 +23,7 @@ router.get(
       } else {
         result = await service.find({});
       }
-      res.status(200).json(result);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
       next();
     } catch (error) {
       next(error);
@@ -37,7 +37,7 @@ router.post(
   async (req, res, next) => {
     try {
       const result = await service.save(req.body);
-      res.status(200).json(result);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
       next();
     } catch (error) {
       next(error);
@@ -52,7 +52,7 @@ router.patch(
   async (req, res, next) => {
     try {
       const result = await service.updateOne(req.query._id, req.body);
-      res.status(200).json(result);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
       next();
     } catch (error) {
       next(error);
@@ -66,7 +66,7 @@ router.delete(
   async (req, res, next) => {
     try {
       const result = await service.deleteOne(req.query._id);
-      res.status(200).json(result);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
       next();
     } catch (error) {
       next(error);

@@ -1,7 +1,12 @@
 import express from "express";
 
 import UserService from "../services/user.service";
-import { getIdUserSchema, getIdQueryUserSchema, postUserSchema, patchUserSchema } from "../schemas/user.schema";
+import {
+  getIdUserSchema,
+  getIdQueryUserSchema,
+  postUserSchema,
+  patchUserSchema,
+} from "../schemas/user.schema";
 import validatorHandler from "../middlewares/validator.handler";
 
 const router = express.Router();
@@ -12,14 +17,14 @@ router.get(
   validatorHandler(getIdQueryUserSchema, `query`),
   async (req, res, next) => {
     try {
-      let obj = [];
+      let result = [];
       if (req.query._id) {
-        obj = await service.findOne(req.query._id);
+        result = await service.findOne(req.query._id);
       } else {
-        obj = await service.find({});
+        result = await service.find({});
       }
-      res.status(200).json(obj);
-      next()
+      res.status(200).json({ statusCode: 200, error: null, data: result });
+      next();
     } catch (error) {
       next(error);
     }
@@ -31,8 +36,8 @@ router.post(
   validatorHandler(postUserSchema, `body`),
   async (req, res, next) => {
     try {
-      const obj = await service.create(req.body);
-      res.status(201).json(obj);
+      const result = await service.create(req.body);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
     } catch (error) {
       next(error);
     }
@@ -45,8 +50,8 @@ router.patch(
   validatorHandler(patchUserSchema, `body`),
   async (req, res, next) => {
     try {
-      const obj = await service.update(req.query._id, req.body);
-      res.status(200).json(obj);
+      const result = await service.update(req.query._id, req.body);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
       next();
     } catch (error) {
       next(error);
@@ -60,7 +65,7 @@ router.delete(
   async (req, res, next) => {
     try {
       const result = await service.delete(req.query._id);
-      res.status(200).json(result);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
       next();
     } catch (error) {
       next(error);

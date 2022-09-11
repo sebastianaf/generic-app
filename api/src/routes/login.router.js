@@ -12,8 +12,8 @@ router.post(
   validatorHandler(postLoginSchema, `body`),
   async (req, res, next) => {
     try {
-      const obj = await service.login(req.body);
-      res.status(200).json(obj);
+      const result = await service.login(req.body);
+      res.status(200).json({ statusCode: 200, error: null, data: result });
       next();
     } catch (error) {
       next(error);
@@ -23,8 +23,8 @@ router.post(
 
 router.get("/", async (req, res, next) => {
   try {
-    const obj = await service.check(req.headers.token);
-    res.status(200).json(obj);
+    const result = await service.check(req.headers.token);
+    res.status(200).json({ statusCode: 200, error: null, data: result });
     next();
   } catch (error) {
     next(error);

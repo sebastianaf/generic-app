@@ -4,7 +4,7 @@ const _id = Joi.number();
 const name = Joi.string().min(2);
 const alias = Joi.string().min(2);
 const password = Joi.string().min(2);
-const roleId = Joi.string().min(2);
+const roleId = Joi.number();
 const userId = Joi.number();
 
 const postUserSchema = Joi.object({

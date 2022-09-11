@@ -14,20 +14,12 @@ const RoleSchema = {
     type: DataTypes.STRING,
     unique: true,
   },
-
-  createAt: {
-    allowNull: true,
-    field: "created_at",
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW,
-  },
 };
 
 class Role extends Model {
   static associate(models) {
     this.hasMany(models.User, {
-      as: "roles",
-      foreignKey: "roleId"
+      foreignKey: "roleId",
     });
   }
 
@@ -36,7 +28,7 @@ class Role extends Model {
       sequelize,
       tableName: ROLE_TABLE,
       modelName: "Role",
-      timestamps: false,
+      timestamps: true,
     };
   }
 }

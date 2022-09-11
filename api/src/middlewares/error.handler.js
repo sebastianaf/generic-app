@@ -1,7 +1,4 @@
 import { ValidationError } from "sequelize";
-import errorCodes from "../config/errorCodes";
-
-const boom = require("@hapi/boom");
 
 const logErrors = (err, req, res, next) => {
   console.error(err);
@@ -10,8 +7,15 @@ const logErrors = (err, req, res, next) => {
 
 const boomErrorHandler = (err, req, res, next) => {
   if (err.isBoom) {
-    const { output } = err;
-    res.status(output.statusCode).json({ ...output.payload, data: err.data });
+    res.status(err.output.statusCode).json({
+      statusCode: err.output.statusCode,
+      error: {
+        name: err.output.payload.error,
+        msg: err.output.payload.message,
+        detail: err.data ? err.data.message : null,
+      },
+      data: null,
+    });
   }
   next(err);
 };
@@ -20,18 +24,27 @@ const ormErrorHandler = (err, req, res, next) => {
   if (err instanceof ValidationError) {
     res.status(409).json({
       statusCode: 409,
-      message: err.name,
-      error: { detail: err.parent.detail, ...err.errors[0] },
+      error: {
+        name: err.name,
+        msg: err.message,
+        detail: err.parent.detail,
+      },
+      data: null,
     });
   }
   next(err);
 };
 
 const errorHandler = (err, req, res, next) => {
+  console.log(err);
   res.status(500).json({
     statusCode: 500,
-    message: err.message,
-    stack: err.stack,
+    error: {
+      name: err.name,
+      msg: err.message,
+      detail: err.parent ? err.parent.detail : null,
+    },
+    data: null,
   });
 };
 export { logErrors, boomErrorHandler, ormErrorHandler, errorHandler };

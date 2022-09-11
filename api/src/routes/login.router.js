@@ -21,17 +21,14 @@ router.post(
   }
 );
 
-router.get(
-  "/",
-  async (req, res, next) => {
-    try {
-      const obj = await service.check(req.headers.token);
-      res.status(200).json(obj);
-      next();
-    } catch (error) {
-      next(error);
-    }
+router.get("/", async (req, res, next) => {
+  try {
+    const obj = await service.check(req.headers.token);
+    res.status(200).json(obj);
+    next();
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 export default router;

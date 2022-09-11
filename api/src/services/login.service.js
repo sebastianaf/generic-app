@@ -20,6 +20,7 @@ class LoginService {
      */
     let user = await models.User.findOne({ where: { alias } });
     if (user) {
+      correct;
       const correct = await bcryptjs.compare(
         password,
         user.dataValues.password
@@ -31,7 +32,7 @@ class LoginService {
         });
         let token = jwt.sign(
           { role: role.dataValues.name, ...user.dataValues },
-          process.env.API_TOKEN,
+          process.env.API_TOKEN_SIGN,
           {
             expiresIn: process.env.API_TOKEN_EXPIRATION_TIME,
           }
@@ -41,16 +42,13 @@ class LoginService {
       }
     }
     throw boom.badRequest(
-      errorCodes.BAD_USER_OR_PASSWORD.title,
+      errorCodes.BAD_USER_OR_PASSWORD.name,
       errorCodes.BAD_USER_OR_PASSWORD
     );
   }
 
   async check(token) {
     const decrypted = decrypt(token);
-    if (!decrypted) {
-      throw boom.badData(errorCodes.BAD_TOKEN.title, errorCodes.BAD_TOKEN);
-    }
     return decrypted;
   }
 }

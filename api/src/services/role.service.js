@@ -1,4 +1,6 @@
 import sequelize from "../db/sequelize";
+import boom from "@hapi/boom";
+import errorCodes from "../config/errorCodes";
 
 const { models } = sequelize;
 
@@ -12,6 +14,12 @@ class RoleService {
 
   async findOne(id) {
     const obj = await models.Role.findByPk(id);
+    if (!obj) {
+      throw boom.notFound(
+        errorCodes.DB_NOT_FOUND.name,
+        errorCodes.DB_NOT_FOUND
+      );
+    }
     return obj;
   }
 
@@ -21,15 +29,15 @@ class RoleService {
   }
 
   async update(id, data) {
-    const obj = await models.Role.findByPk(id);
-    const res = await obj.update(data);
-    return res;
+    const obj = await this.findOne(id);
+    const obj2 = await obj.update(data);
+    return obj2;
   }
 
   async delete(id) {
-    const obj = await models.Role.findByPk(id);
+    const obj = await this.findOne(id);
     await obj.destroy();
-    return { error: null };
+    return null;
   }
 }
 

@@ -8,14 +8,17 @@ const decrypt = (token) => {
     token,
     SHA256(process.env.API_TOKEN).toString()
   ).toString(CryptoJS.enc.Utf8);
-  const decodedToken = jwt.decode(`${decryptedToken}`, process.env.API_TOKEN);
-  return decodedToken;
+  const freshToken = jwt.verify(`${decryptedToken}`, process.env.API_TOKEN_SIGN);
+  if (freshToken) {
+    return jwt.decode(`${decryptedToken}`, process.env.API_TOKEN_SIGN);
+  }
+  return undefined;
 };
 
 const encrypt = (token) => {
   let encryptedToken = AES.encrypt(
     token,
-    SHA256(process.env.API_TOKEN).toString()
+    SHA256(process.env.API_TOKEN_SIGN).toString()
   ).toString();
   return encryptedToken;
 };

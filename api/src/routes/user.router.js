@@ -19,6 +19,7 @@ router.get(
         obj = await service.find({});
       }
       res.status(200).json(obj);
+      next()
     } catch (error) {
       next(error);
     }

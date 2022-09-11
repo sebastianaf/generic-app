@@ -22,11 +22,11 @@ const roleHandler = async (req, res, next) => {
       if (isAllowed) {
         next();
       } else {
-        next(boom.forbidden(errorCodes.FORBIDDEN.title, errorCodes.FORBIDDEN));
+        next(boom.forbidden(errorCodes.FORBIDDEN.name, errorCodes.FORBIDDEN));
       }
     }
   } catch (error) {
-    next(boom.forbidden(errorCodes.FORBIDDEN.title, errorCodes.FORBIDDEN));
+    next(boom.forbidden(errorCodes.FORBIDDEN.name, errorCodes.FORBIDDEN));
   }
 };
 

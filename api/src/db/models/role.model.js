@@ -29,6 +29,7 @@ class Role extends Model {
       tableName: ROLE_TABLE,
       modelName: "Role",
       timestamps: true,
+      underscored: true,
     };
   }
 }

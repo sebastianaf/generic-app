@@ -11,12 +11,16 @@ class UserService {
   constructor() {}
 
   async find(filter) {
-    let obj = await models.User.findAll(filter);
+    let obj = await models.User.findAll({
+      include: ["role", "user"],
+    });
     return obj;
   }
 
   async findOne(id) {
-    const obj = await models.User.findByPk(id);
+    const obj = await models.User.findByPk(id, {
+      include: ["role", "user"],
+    });
     console.log(obj);
     if (!obj) {
       throw boom.notFound(
@@ -31,8 +35,8 @@ class UserService {
     const obj = await this.findOne(id);
 
     const salt = await bcryptjs.genSalt(10);
-    const encryptedPassword = await bcryptjs.hash(data.password, salt);
-    data.password = encryptedPassword;
+    const hashedPassword = await bcryptjs.hash(data.password, salt);
+    data.password = hashedPassword;
 
     const res = await obj.update(data);
     return res;
@@ -79,9 +83,9 @@ class UserService {
   async create(data) {
     const { alias, name, password, roleId, userId } = data;
     const salt = await bcryptjs.genSalt(10);
-    const encryptedPassword = await bcryptjs.hash(password, salt);
+    const hashedPassword = await bcryptjs.hash(password, salt);
     const newUser = await models.User.create({
-      password: encryptedPassword,
+      password: hashedPassword,
       alias,
       userId,
       name,

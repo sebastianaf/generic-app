@@ -27,7 +27,7 @@ const ormErrorHandler = (err, req, res, next) => {
       error: {
         name: err.name,
         msg: err.message,
-        detail: err.parent.detail,
+        detail: err.parent ? err.parent.detail : null,
       },
       data: null,
     });
@@ -36,7 +36,6 @@ const ormErrorHandler = (err, req, res, next) => {
 };
 
 const errorHandler = (err, req, res, next) => {
-  console.log(err);
   res.status(500).json({
     statusCode: 500,
     error: {

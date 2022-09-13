@@ -29,7 +29,6 @@ const UserSchema = {
 
   roleId: {
     allowNull: true,
-    field: "role_id",
     type: DataTypes.INTEGER,
     references: {
       model: ROLE_TABLE,
@@ -39,31 +38,31 @@ const UserSchema = {
 
   userId: {
     allowNull: true,
-    field: "id_user",
     type: DataTypes.INTEGER,
     references: {
       model: USER_TABLE,
       key: "id",
     },
   },
-
-  createAt: {
-    allowNull: true,
-    field: "created_at",
-    type: DataTypes.DATE,
-    defaultValue: Sequelize.NOW,
-  },
 };
 
 class User extends Model {
-  static associate() {}
+  static associate(models) {
+    this.belongsTo(models.Role, {
+      as: "role",
+    });
+    this.belongsTo(models.User, {
+      as: "user",
+    });
+  }
 
   static config(sequelize) {
     return {
       sequelize,
       tableName: USER_TABLE,
       modelName: "User",
-      timestamps: false,
+      timestamps: true,
+      underscored: true,
     };
   }
 }

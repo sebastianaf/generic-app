@@ -15,13 +15,13 @@ const sequelize = new Sequelize(dbData.database, dbData.user, dbData.password, {
 /**
  * Setup the models to Sequelize
  */
-console.log(`-----------Septing up models-----------`);
 setupModels(sequelize);
+console.log(`Setting up models... OK`);
 
 /**
  * Sync the models with the database
  */
-console.log(`-----------Syncing models-----------`);
-sequelize.sync({ force: false });
+sequelize.sync({ force: true });
+console.log(`Syncing models... OK`);
 
 export default sequelize;

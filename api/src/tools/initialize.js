@@ -8,7 +8,7 @@ const initAdminUser = async () => {
     setTimeout(async () => {
       const user = await userService.createfirstUser();
       console.log(`Admin user... OK`);
-    }, 2000);
+    }, 4000);
   } catch (error) {
     console.log(`Admin user... FAIL`);
   }
